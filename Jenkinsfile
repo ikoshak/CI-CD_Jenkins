@@ -10,7 +10,9 @@ pipeline {
         }
         stage('DeployToStaging') {
             when {
-                branch 'master'
+                expression {
+                    return sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim() == "master"
+                }
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
